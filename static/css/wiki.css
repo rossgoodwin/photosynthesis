@@ -1,0 +1,86 @@
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: rgb(30, 30, 60);
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#searchForm {
+  display: none;
+  height: 50%;
+  width: 50%;
+  font-size: 2rem;
+  margin: auto;
+  color: rgb(255, 255, 255);
+  padding: 2rem;
+}
+
+#searchForm > * {
+  font-size: 2rem;
+
+          box-sizing: border-box;
+     -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+input:focus {
+  border-color: rgba(200, 100, 100, 1);
+  background-color: rgba(255, 255, 180, 1);
+}
+
+.pointer {
+  background: transparent;
+  border: 2px solid rgba(0, 0, 0, .3);
+  border-radius: 100%;
+  box-shadow: 0px 0px 1px rgba(255, 255, 255, 0.3);
+}
+
+.focused {
+  background-color: rgb(255, 255, 215);
+}
+
+.page-container {
+  border: 0.25rem solid rgba(0, 0, 0, 0.5);
+  width: 480px;
+  opacity: 0.8;
+  /* overflow-y: scroll; */
+  box-sizing: border-box;
+}
+
+/* .page-content > div > * {
+  padding: 1rem;
+  margin: auto;
+} */
+
+.page-container > * {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 1rem;
+}
+
+.page-title {
+  margin-left: 1rem;
+  font-size: 2rem;
+  text-decoration: underline;
+}
+
+.btnClose {
+  border: 1px solid;
+  border-width: 1px 0;
+  border-color: rgba(255, 255, 255, 0.5) rgb(0, 0, 0) rgb(0, 0, 0);
+  font-size: 1.5rem;
+  padding: 1rem;
+}
+
+.active-green {
+  border-color: rgb(100, 255, 100);
+}

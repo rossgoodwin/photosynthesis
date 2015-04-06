@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Babbles text generated from your images.">
+  <meta name="author" content="Ross Goodwin">
+  <title>photo synthesis</title>
+
+<link href='http://fonts.googleapis.com/css?family=Cousine:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+  <!-- Bootstrap core CSS -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css"> -->
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+  <!-- Custom styles for this template -->
+<!--   <link href="/static/css/cover.css" rel="stylesheet"> -->
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+<style>
+
+body.backgroundcolor {
+  font-family: "Cousine", monospace;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333;
+  background-color: #F2F1EF;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.toppad {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+</style>
+
+</head>
+
+<body class="backgroundcolor">
+
+<div class="container">
+  <div class="row">
+
+            <div id="inputimgbox" class="col-xs-12 col-sm-12 col-md-12 toppad">
+              <a href="{{ imgUrl }}"><img class="inputimg" src="{{ imgUrl }}" width="200"></a>
+            </div>
+
+            <div id="imgtextbox" class="col-xs-12 col-sm-12 col-md-12 toppad">
+              <p class="imgtext">{{ imgText|safe }}</p>
+            </div>
+
+            <!-- <div class="col-xs-7 col-md-6">
+            <audio id="audiobox" controls autoplay preload="auto">
+              <source id="mp3src" src="{{ audUrl }}" type="audio/mp3">
+              Your browser does not support the <code>audio</code> element.
+            </audio>
+            </div> -->
+
+  </div>
+</div>
+
+</body>
+
+</html>

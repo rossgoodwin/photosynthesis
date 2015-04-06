@@ -1,0 +1,5 @@
+$transition_0 $tag_0_aan, $tag_1_aan, and $tag_2_aan. $transition_1 the $tag_0 $tag_0_predicate_0. The $tag_1 $tag_1_predicate_0, and the $tag_2 $tag_2_predicate_0. $transition_2 the $tag_0 $tag_0_predicate_1. $tag_0_dump2
+
+$transition_3 $tag_3_aan and $tag_4_aan: the $tag_3 $tag_3_predicate_0, and the $tag_4 $tag_4_predicate_0. $transition_4 the $tag_4 $tag_4_predicate_1. $tag_4_dump2 $transition_5 the $tag_3 $tag_3_predicate_1. $tag_3_dump2
+
+$transition_6 $tag_5_aan, which $tag_5_predicate_0. $tag_5_dump4

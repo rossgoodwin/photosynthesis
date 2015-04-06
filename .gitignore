@@ -1,0 +1,8 @@
+*.pyc
+output/
+static/aud/
+static/img/
+psenv/
+conceptnet5/
+en/
+py/
