@@ -16,9 +16,13 @@ import subprocess
 import PIL
 from PIL import Image
 import uuid
+from base64 import decodestring
+from flask.ext.mobility import Mobility
+from flask.ext.mobility.decorators import mobilized
 # from signal import signal, SIGPIPE, SIG_DFL
 
 app = Flask(__name__)
+Mobility(app)
 
 app.config['UPLOAD_FOLDER'] = '/var/www/PhotoSyn/PhotoSyn/static/img'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
@@ -36,19 +40,30 @@ api = ClarifaiApi() # Assumes environmental variables have been set
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    if request.MOBILE:
+        return render_template("mobile.html")
+    else:
+        return render_template("index.html")
 
 @app.route("/img", methods=["GET", "POST"])
 def img():
     if request.method == 'POST':
-        f = request.files['file']
-        if f and allowed_file(f.filename):
-            filename = secure_filename(f.filename)
-            f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if request.MOBILE:
+            f = request.files['file']
+            if f and allowed_file(f.filename):
+                filename = secure_filename(f.filename)
+                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                # Resize image and generate unique filename
+                newFilename = resizeImage(filename)
+        else:
+            f = False
+            fstring = request.form['base64img']
+            newFilename = str(uuid.uuid4())+'.jpeg'
+            fh = open(SYSPATH+newFilename, "wb")
+            fh.write(fstring.decode('base64'))
+            fh.close()
 
-            # Resize image and generate unique filename
-            newFilename = resizeImage(filename)
-
+        if newFilename:
             # Generate Text
             photoText = main([newFilename])
             with open(APPPATH+"output/"+newFilename+".txt", "w") as outfile:
@@ -66,12 +81,15 @@ def img():
             imgPath = "/static/img/"+newFilename
             # audioPath = "/static/aud/"+mp3Name
             return render_template("result.html", imgUrl=imgPath, imgText=photoText)
+        else:
+            return "Something went horribly wrong!"
     else:
         return "You didn't say the magic word."
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
 
 def resizeImage(fn):
     longedge = 1000
