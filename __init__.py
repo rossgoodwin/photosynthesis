@@ -9,7 +9,7 @@ from collections import defaultdict
 import string
 from string import Template
 from conceptnet5.language.english import normalize
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from werkzeug import secure_filename
 import os
 import subprocess
@@ -19,6 +19,9 @@ import uuid
 from base64 import decodestring
 from flask.ext.mobility import Mobility
 from flask.ext.mobility.decorators import mobilized
+from pattern.en import referenced as a_or_an
+import time
+import hashids
 # from signal import signal, SIGPIPE, SIG_DFL
 
 app = Flask(__name__)
@@ -30,7 +33,7 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 SYSPATH = '/var/www/PhotoSyn/PhotoSyn/static/img/'
 AUDPATH = '/var/www/PhotoSyn/PhotoSyn/static/aud/'
 APPPATH = '/var/www/PhotoSyn/PhotoSyn/'
-#BASEURL = 'http://127.0.0.1:5000'
+BASEURL = 'http://word.camera'
 
 MAX_GRAF_DENSITY = 6
 
@@ -44,6 +47,10 @@ def index():
         return render_template("mobile.html")
     else:
         return render_template("index.html")
+
+@app.route("/i/<slug>")
+def userpage(slug):
+    return send_from_directory(APPPATH+'static/output', slug+'.html')
 
 @app.route("/img", methods=["GET", "POST"])
 def img():
@@ -66,8 +73,8 @@ def img():
         if newFilename:
             # Generate Text
             photoText = main([newFilename])
-            with open(APPPATH+"output/"+newFilename+".txt", "w") as outfile:
-                outfile.write(photoText)
+            # with open(APPPATH+"output/"+newFilename+".txt", "w") as outfile:
+            #     outfile.write(photoText)
             photoText = photoText.replace("\n", "<br />")
 
             # oggName = filename.split(".")[0]+".ogg"
@@ -80,11 +87,24 @@ def img():
 
             imgPath = "/static/img/"+newFilename
             # audioPath = "/static/aud/"+mp3Name
-            return render_template("result.html", imgUrl=imgPath, imgText=photoText)
+            # return render_template("result.html", imgUrl=imgPath, imgText=photoText)
+
+            # NEW PART
+            html = render_template("result.html", imgUrl=imgPath, imgText=photoText)
+            slug = url_hash()
+            with open(APPPATH+"static/output/"+slug+".html", "w") as outfile:
+                outfile.write(html)
+
+            return redirect(BASEURL+"/i/"+slug)
         else:
             return "Something went horribly wrong!"
     else:
         return "You didn't say the magic word."
+
+def url_hash():
+    millis = int(round(time.time() * 1000))
+    hi = hashids.Hashids(salt="That is what your mother said last night")
+    return hi.encode(millis)
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -125,12 +145,12 @@ def extractTags(filenames):
 
     return sorted(tags_probs, key=lambda x: x[1])
 
-def a_or_an(word):
-    #return en.noun.article(word)
-    if word[0].lower() in ['a', 'e', 'i', 'o', 'u']:
-        return "an" + " " + word
-    else:
-        return "a" + " " + word
+# def a_or_an(word):
+#     #return en.noun.article(word)
+#     if word[0].lower() in ['a', 'e', 'i', 'o', 'u']:
+#         return "an" + " " + word
+#     else:
+#         return "a" + " " + word
 
 def uniqify(seq, idfun=None): 
     if idfun is None:
