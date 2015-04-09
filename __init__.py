@@ -226,17 +226,21 @@ def verbConjugate(lemma, rel, aan):
             result = lemma.replace(vb, conjugate(vb, "part"))
         except:
             result = lemma
-
-        if not aan:
-            try:
-                firstWord = s[0].chunks[0].words[0].string
-                reconjugated = conjugate(firstWord, "part")
-                result = lemma.replace(firstWord, reconjugated)
-            except:
+        else:
+            if vb == "to":
                 result = lemma
+
+        # if not aan:
+        #     try:
+        #         firstWord = s[0].chunks[0].words[0].string
+        #         reconjugated = conjugate(firstWord, "part")
+        #         result = lemma.replace(firstWord, reconjugated)
+        #     except:
+        #         result = lemma
 
     else:
         result = lemma
+        
     return result
 
 def explodeTag(tag):
