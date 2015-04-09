@@ -24,10 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 You can contact Ross Goodwin at ross.goodwin@gmail.com or address
 physical correspondence and verbal abuse to:
  
-Ross Goodwin c/o ITP
-721 Broadway
-4th Floor
-New York, NY 10003
+	Ross Goodwin c/o ITP
+	721 Broadway
+	4th Floor
+	New York, NY 10003
 
 
 ## Cautionary Preamble
