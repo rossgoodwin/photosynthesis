@@ -44,8 +44,10 @@ from base64 import decodestring
 from flask.ext.mobility import Mobility
 from flask.ext.mobility.decorators import mobilized
 from pattern.en import referenced as a_or_an
+from pattern.en import parsetree, UNIVERSAL, conjugate
 import time
 import hashids
+from salty import saline
 # from signal import signal, SIGPIPE, SIG_DFL
 
 app = Flask(__name__)
@@ -79,7 +81,13 @@ def userpage(slug):
 @app.route("/img", methods=["GET", "POST"])
 def img():
     if request.method == 'POST':
-        if request.MOBILE:
+        newFilename = ""
+
+        try:
+            dtopUpload = request.form['IfYouScriptThisForm'] == 'GnomesWillEatYourLungs'
+        except:
+            dtopUpload = False
+        if request.MOBILE or dtopUpload:
             f = request.files['file']
             if f and allowed_file(f.filename):
                 filename = secure_filename(f.filename)
@@ -127,7 +135,7 @@ def img():
 
 def url_hash():
     millis = int(round(time.time() * 1000))
-    hi = hashids.Hashids(salt="That is what your mother said last night")
+    hi = hashids.Hashids(salt=salty.saline)
     return hi.encode(millis)
 
 def allowed_file(filename):
@@ -207,6 +215,30 @@ def conceptNet(start):
 def startsWithCheck(toCheck, wordList):
     return any(toCheck.startswith(word+" ") for word in wordList)
 
+def verbConjugate(lemma, rel, aan):
+    relAvoid = ["/r/CapableOf", "/r/PartOf", "/r/MemberOf"
+                "/r/IsA", "/r/HasA", "/r/TranslationOf",
+                "/r/HasProperty"]
+    if not rel in relAvoid:
+        s = parsetree(lemma, relations=True)
+        try:
+            vb = s[0].verbs[0].words[0].string
+            result = lemma.replace(vb, conjugate(vb, "part"))
+        except:
+            result = lemma
+
+        if not aan:
+            try:
+                firstWord = s[0].chunks[0].words[0].string
+                reconjugated = conjugate(firstWord, "part")
+                result = lemma.replace(firstWord, reconjugated)
+            except:
+                result = lemma
+
+    else:
+        result = lemma
+    return result
+
 def explodeTag(tag):
     relDict = {
         "/r/RelatedTo": ["evokes", False],
@@ -223,14 +255,14 @@ def explodeTag(tag):
         "/r/HasLastSubevent": ["ends with", True],
         "/r/HasPrerequisite": ["requires", True],
         "/r/HasProperty": ["is", False],
-        "/r/MotivatedByGoal": ["yearns for", False],
+        "/r/MotivatedByGoal": ["dreams of", False],
         "/r/ObstructedBy": ["struggles with", True],
-        "/r/Desires": ["wants", False],
+        "/r/Desires": ["yearns for", False],
         "/r/CreatedBy": ["resulted from", True],
         "/r/Synonym": ["is also known as", True],
         "/r/Antonym": ["is not", True],
-        "/r/DerivedFrom": ["was made from", True],
-        "/r/TranslationOf": ["known to some as", False],
+        "/r/DerivedFrom": ["is made from", True],
+        "/r/TranslationOf": ["is known to some as", False],
         "/r/DefinedAs": ["remains", True]
     }
     articleList = ["a", "an", "the"]
@@ -252,7 +284,11 @@ def explodeTag(tag):
             verb, aan = relDict[rel]
         except KeyError:
             verb = False
-        if verb and len(endLemma) > 1 and not endLemma in [tag, normalizedTag]:
+        else:
+            unmodified = endLemma
+            endLemma = verbConjugate(unmodified, rel, aan)
+
+        if verb and len(endLemma) > 1 and not unmodified in [tag, normalizedTag]:
             if aan and not startsWithCheck(endLemma, articleList):
                 candidates[verb].append(a_or_an(endLemma))
             else:
@@ -264,7 +300,7 @@ def explodeTag(tag):
 
 
 def open_template(x):
-    f = open(APPPATH+"tem/template_%s.txt" % str(x), 'r')
+    f = open(APPPATH+"tem/template_%s.txt" % str(x), 'r') # THERE IS A REASON FOR NOT USING %i
     text = f.read()
     templ = Template(text)
     f.close()

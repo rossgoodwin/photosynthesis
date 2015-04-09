@@ -257,6 +257,11 @@ label.btn input[type="file"] {
   background-color: #E08283;
 }
 
+.btn-gray-hover:hover {
+  background-color: #D2D7D3;
+  border-color: #D2D7D3;
+}
+
 .custom-font {
 	font-family: "Cousine", monospace;
 	/*text-align: left;*/
@@ -277,6 +282,26 @@ label.btn input[type="file"] {
 
 .top-space {
 	padding-top: 10px;
+}
+
+.more-top-space {
+  padding-top: 40px;
+}
+
+.little-top-space {
+  margin-top: 5px;
+}
+
+.top-vacuum {
+  margin-top: -50px;
+}
+
+.bottom-vacuum {
+  margin-bottom: -5px;
+}
+
+.left-space {
+  padding-left: 90px;
 }
 
 a.underline-links {
@@ -416,11 +441,23 @@ loadingdiv {
       				<!-- </form> -->
       			</div>
             <!-- </p> -->
+
             <p class="lead top-space left-align">
             Allow camera access, then click<br />
-            the <span class="red-text">red button</span> to make a lexograph.
-            </p>
-            <p class="xtra-small"><em>
+            the <span class="red-text">red button</span> to make a lexograph.            </p>
+
+            <p class="top-space left-align bottom-vacuum">
+             Or upload an image from your computer:
+           </p>
+
+          <form id="form top-vacuum" action="img" method="post" enctype="multipart/form-data">
+
+                <input class="top-space left-space" style="margin-left:auto;margin-right:auto;" type="file" capture="camera" accept="image/*" id="file" name="file">
+                <input type="hidden" name="IfYouScriptThisForm" value="GnomesWillEatYourLungs">
+                <button class="btn btn-default btn-xs btn-gray-hover little-top-space" name="submit" type="submit" onclick="gogogo()">upload</button>
+          </form>
+
+            <p class="xtra-small more-top-space"><em>
             The generator may take up to 5 minutes to translate your image into text.
             </em></p>
             <p class="top-space left-align"><a href="http://word.camera">word.camera</a> by <a href="http://rossgoodwin.com">Ross Goodwin</a>, 2015</p>
@@ -439,6 +476,10 @@ loadingdiv {
     </div>
 
 <script>
+
+var streamObj = null;
+
+// var submitFromDesktopForm = document.getElementById("file");
 
 (function() {
   // The width and height of the captured photo. We will set the
@@ -460,7 +501,7 @@ loadingdiv {
   var canvas = null;
   // var photo = null;
   var startbutton = null;
-  var streamObj = null;
+  // var streamObj = null;
 
   function startup() {
     video = document.getElementById('video');
@@ -562,7 +603,16 @@ loadingdiv {
   // Set up our event listener to run the startup process
   // once loading is complete.
   window.addEventListener('load', startup, false);
+
 })();
+
+function gogogo() {
+  if (!!streamObj) {
+    streamObj.stop();
+  }
+    divShow();
+    loop();
+};
 
 function post(path, params, method) {
     method = method || "post"; // Set method to post by default if not specified.
@@ -595,12 +645,6 @@ function divShow() {
 function divHide() {
   document.getElementById('p5canvas').style.display = "none";
 }
-
-// document.getElementById("file").onchange = function() {
-//     document.getElementById("form").submit();
-//     divShow();
-//     loop();
-// };
 
 </script>
 
