@@ -32,7 +32,7 @@ physical correspondence and verbal abuse to:
 
 ## Cautionary Preamble
 
-I developed this project as a creative exercise rather than an engineering task. As a result, it is a total mess. Full disclosure: I wrote this code very quickly. I didn't leave many comments. If you are about to dive into my [__init__.py](https://github.com/rossgoodwin/photosynthesis/blob/master/__init__.py) file, which is the main file for this program, I apologize in advance. 
+I developed this project as a creative exercise rather than an engineering task. As a result, it is a total mess. Full disclosure: I wrote this code very quickly. I didn't leave many comments. If you are about to dive into my `__init__.py` file, which is the main file for this program, I apologize in advance. 
 
 This is the current version of the code that is running live on word.camera's web server, so please do not be offended if I do not accept your pull request.
 
