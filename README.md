@@ -1,6 +1,10 @@
-# photosynthesis
+lexograph /ˈleksəʊɡɹɑːf/ (n.) A text document generated from digital image data using computer vision software.
 
-Built for the [word.camera](http://word.camera) image-to-text translator by [Ross Goodwin](http://rossgoodwin.com)
+# SO, YOU WANT TO MAKE A WORD CAMERA?
+
+You should, because lexography is for everyone. 
+
+Feel free to use my code to get yourself started. However, it is licensed under GPL v3, which means you must make your code available under the same terms.
 
 
 ## License Information
@@ -32,9 +36,7 @@ physical correspondence and verbal abuse to:
 
 ## Cautionary Preamble
 
-I developed this project as a creative exercise rather than an engineering task. As a result, it is a total mess. Full disclosure: I wrote this code very quickly. I didn't leave many comments. If you are about to dive into my `__init__.py` file, which is the main file for this program, I apologize in advance. 
-
-This is the current version of the code that is running live on word.camera's web server, so please do not be offended if I do not accept your pull request.
+I wrote this code as a creative exercise rather than an engineering task. I plan to clean it up and improve its documentation when I have a chance.
 
 
 ## Running Your Own Copy

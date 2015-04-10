@@ -48,6 +48,7 @@ from pattern.en import parsetree, UNIVERSAL, conjugate
 import time
 import hashids
 from salty import saline
+import exifread
 # from signal import signal, SIGPIPE, SIG_DFL
 
 app = Flask(__name__)
@@ -145,6 +146,26 @@ def allowed_file(filename):
 
 def resizeImage(fn):
     longedge = 1000
+    orientDict = {
+        1: (0, 1),
+        2: (0, PIL.Image.FLIP_LEFT_RIGHT),
+        3: (-180, 1),
+        4: (0, PIL.Image.FLIP_TOP_BOTTOM),
+        5: (-90, PIL.Image.FLIP_LEFT_RIGHT),
+        6: (-90, 1),
+        7: (90, PIL.Image.FLIP_LEFT_RIGHT),
+        8: (90, 1)
+    }
+
+    imgOriList = []
+    try:
+        f = open(SYSPATH+fn, "rb")
+        exifTags = exifread.process_file(f, details=False, stop_tag='Image Orientation')
+        if 'Image Orientation' in exifTags:
+            imgOriList.extend(exifTags['Image Orientation'].values)
+    except:
+        pass
+
     img = Image.open(SYSPATH+fn)
     w, h = img.size
     newName = str(uuid.uuid4())+'.jpeg'
@@ -152,12 +173,21 @@ def resizeImage(fn):
         wpercent = (longedge/float(w))
         hsize = int((float(h)*float(wpercent)))
         img = img.resize((longedge,hsize), PIL.Image.ANTIALIAS)
-        img.save(SYSPATH+newName, format='JPEG')
     else:
         hpercent = (longedge/float(h))
         wsize = int((float(w)*float(hpercent)))
         img = img.resize((wsize,longedge), PIL.Image.ANTIALIAS)
-        img.save(SYSPATH+newName, format='JPEG')
+
+    for val in imgOriList:
+        if val in orientDict:
+            deg, flip = orientDict[val]
+            img = img.rotate(deg)
+            if flip != 1:
+                img = img.transpose(flip)
+
+    img.save(SYSPATH+newName, format='JPEG')
+    os.remove(SYSPATH+fn)
+    
     return newName
 
 def extractTags(filenames):
