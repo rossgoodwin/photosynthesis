@@ -1,6 +1,8 @@
-lexograph /ˈleksəʊɡɹɑːf/ (n.) A text document generated from digital image data using computer vision software.
+lexograph /ˈleksəʊɡɹɑːf/ (n.) 
+A text document generated from digital image data
 
-# SO, YOU WANT TO MAKE A WORD CAMERA?
+
+# SO YOU WANT TO MAKE A WORD CAMERA?
 
 You should, because lexography is for everyone. 
 
