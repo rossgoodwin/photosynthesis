@@ -75,6 +75,10 @@ def index():
     else:
         return render_template("index.html")
 
+@app.route("/sitemap")
+def sitemap():
+    return send_from_directory(APPPATH+'static/assets', 'sitemap.xml')
+
 @app.route("/i/<slug>")
 def userpage(slug):
     return send_from_directory(APPPATH+'static/output', slug+'.html')
