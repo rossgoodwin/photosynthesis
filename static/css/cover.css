@@ -85,11 +85,11 @@ body {
 .masthead-nav > li > a {
   padding-right: 0;
   padding-left: 0;
-  font-size: 16px;
-  font-weight: bold;
-  color: #fff; /* IE8 proofing */
+  font-size: 14px;
+  /*font-weight: bold;*/
+  color: #FFF; /* IE8 proofing */
   color: rgba(255,255,255,.75);
-  border-bottom: 2px solid transparent;
+  border-bottom: 1px dotted transparent;
 }
 .masthead-nav > li > a:hover,
 .masthead-nav > li > a:focus {
@@ -100,18 +100,18 @@ body {
 .masthead-nav > .active > a,
 .masthead-nav > .active > a:hover,
 .masthead-nav > .active > a:focus {
-  color: #fff;
+  color: #FFF;
   border-bottom-color: #fff;
 }
 
-@media (min-width: 768px) {
+/*@media (min-width: 768px) {
   .masthead-brand {
     float: left;
   }
   .masthead-nav {
     float: right;
   }
-}
+}*/
 
 
 /*
@@ -144,12 +144,13 @@ body {
 @media (min-width: 768px) {
   /* Pull out the header and footer */
   .masthead {
-    position: fixed;
-    top: 0;
+    position: absolute;
+    top: -25px;
+    padding-right: 18px;
 /*    background-color: rgba(51, 51, 51, 0.5);*/
   }
   .mastfoot {
-    position: fixed;
+    position: absolute;
     bottom: 0;
   }
   /* Start the vertical centering */

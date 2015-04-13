@@ -82,6 +82,16 @@ New York, NY 10003
 
 <style>
 
+a {
+  color: #6BB9F0;
+  text-decoration: none;
+
+  &:hover {
+    color: #E4F1FE;
+    text-decoration: underline;
+  }
+}
+
 #p5canvas {
   z-index: 100;
   width:100%;
@@ -223,6 +233,7 @@ loadingdiv {
 .camera {
   width: 340px;
   display:block;
+  padding-top: 30px;
   margin: 0px auto 0px auto;
 }
 
@@ -279,17 +290,21 @@ loadingdiv {
 
         <div class="cover-container shadow">
 
-          <div class="masthead clearfix">
-            <div class="inner">
-              <!-- <h3 class="masthead-brand">VIDEO PIZZA</h3> -->
-              <!-- <nav>
-                <ul class="nav masthead-nav">
-                  <li class="active"><a href="#">Home</a></li>
-                  <li><a href="#">About</a></li>
-                </ul>
-              </nav> -->
-            </div>
+        <!-- UNCOMMENT TO ENABLE NAV... -->
+
+        <div class="masthead clearfix custom-font">
+          <div class="inner">
+            <nav>
+              <ul class="nav masthead-nav">
+                <li class="active"><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/albums">Albums</a></li>
+              </ul>
+            </nav>
           </div>
+        </div>
+
+        <!-- COMMENT ENDS HERE -->
 
           <div class="inner cover">
             <!-- <h4 class="cover-heading align-center">word.camera</h4> -->
