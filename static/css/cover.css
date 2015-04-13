@@ -85,7 +85,7 @@ body {
 .masthead-nav > li > a {
   padding-right: 0;
   padding-left: 0;
-  font-size: 14px;
+  font-size: 13px;
   /*font-weight: bold;*/
   color: #FFF; /* IE8 proofing */
   color: rgba(255,255,255,.75);
