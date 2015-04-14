@@ -75,6 +75,14 @@ def index():
     else:
         return render_template("index.html")
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('fourohfour.html'), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('fivehundred.html'), 500
+
 @app.route("/sitemap")
 def sitemap():
     return send_from_directory(APPPATH+'static/assets', 'sitemap.xml')
@@ -269,7 +277,7 @@ def verbConjugate(lemma, rel, aan):
         except:
             result = lemma
         else:
-            if vb == "to":
+            if vb in ["to", "can"]:
                 result = lemma
 
         # if not aan:
