@@ -106,9 +106,17 @@ def abm():
     if 'l' in params:
         hashes = [url.split('/')[-1] for url in params['l']]
     else:
-        hashes = []
+        abort(404)
+    if 't' in params:
+        title = params['t'][0]
+    else:
+        title = "Untitled Lexograph Album"
+    if 'a' in params:
+        author = params['a'][0]
+    else:
+        author = "anonymous"
     abmInput = [(h, chTitle(h)) for h in hashes]
-    tocHtml = render_template("toc.html", albumInput=abmInput)
+    tocHtml = render_template("toc.html", albumInput=abmInput, title=title, author=author)
 
     slug = url_hash()
     tocFilePath = APPPATH+'static/tocs/'+slug+'.html'
@@ -121,14 +129,14 @@ def abm():
         tocFilePath,
         APPPATH+"static/epub/"+slug+".epub",
         "--sr1-search=/static/img/",
-        "--sr1-replace=/var/www/PhotoSyn/PhotoSyn/static/img/",
+        "--sr1-replace="+APPPATH+"/static/img/",
         "--sr2-search=#F2F1EF",
         "--sr2-replace=#FFFFFF",
         "--sr3-search=Tweet",
         "--sr3-replace=",
-        "--cover=/var/www/PhotoSyn/PhotoSyn/static/assets/album_cover.jpg",
-        "--title=Lexographs",
-        "--authors=word.camera",
+        "--cover="+APPPATH+"/static/assets/album_cover.jpg",
+        "--title="+title,
+        "--authors="+author,
         "--publisher=word.camera"
         ])
 
@@ -139,7 +147,16 @@ def abm():
 @app.route("/a/<slug>")
 def album(slug):
     if os.path.isfile(APPPATH+"static/epub/"+slug+".epub"):
-        return render_template("a.html", s=slug)
+        tocFile = open(APPPATH+"static/tocs/"+slug+".html")
+        tocText = tocFile.read()
+        soup = BeautifulSoup(tocText)
+        try:
+            title = soup.find(id="title").string
+            byline = soup.find(id="byline").string
+        except:
+            title = "Untitled Lexograph Album"
+            byline = "by anonymous"
+        return render_template("a.html", s=slug, t=title, b=byline)
     else:
         abort(404)
 

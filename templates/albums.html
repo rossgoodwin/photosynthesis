@@ -36,18 +36,25 @@
   <br />
   <label for="ti4"><input type="text" name="l" size=35 id="ti4"></label>
   <br />
-  <div id="readroot">
+  <div id="readroot" style="display:none;">
     <label for="ti5"><input type="text" name="l" size=35 id="ti5"></label>
   	<br />
   </div>
 
   <span id="writeroot"></span>
 
+  <button class="btn btn-default glyphicon glyphicon-plus" type="button" style="padding: 2px 6px 2px 7px; font-size: 18px;" onclick="moreFields();"></button>
+  <br />
+
+    <label for="the-title" style="color:#FFF; padding-top: 25px;">Title (optional):<br/><input type="text" style="color:#333;" name="t" size=30 id="the-title"></label>
+    <br />
+
+    <label for="the-author=" style="color:#FFF; padding-top: 5px;">Curated by (optional):<br/><input type="text" name="a" size=30 id="the-author" style="color:#333;"></label>
+    <br />
+
 <!--   <div class="albumButtonBox"> -->
 
-  <button class="btn btn-default glyphicon glyphicon-plus" type="button" style="padding: 2px 6px 2px 7px; font-size: 18px; margin-right: 100px;" onclick="moreFields();"></button>
-
-  <button class="btn btn-danger glyphicon glyphicon-cog" style="padding: 2px 7px 2px 7px; font-size: 20px;" type="submit" name="generate" id="bigredbutton"></button>
+  <button class="btn btn-danger glyphicon glyphicon-cog" style="margin-top: 10px; padding: 5px 10px 5px 10px; font-size: 20px;" type="submit" name="generate" id="bigredbutton"></button>
 
 <!--   </div> -->
 
