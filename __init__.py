@@ -149,6 +149,7 @@ def album(slug):
     if os.path.isfile(APPPATH+"static/epub/"+slug+".epub"):
         tocFile = open(APPPATH+"static/tocs/"+slug+".html")
         tocText = tocFile.read()
+        tocFile.close()
         soup = BeautifulSoup(tocText)
         try:
             title = soup.find(id="title").string
