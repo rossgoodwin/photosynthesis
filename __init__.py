@@ -26,6 +26,7 @@ from py.client import ClarifaiApi
 import random
 from random import choice as rc
 from random import sample as rs
+from random import randint as ri
 #import en
 import requests
 import collections
@@ -33,9 +34,10 @@ from collections import defaultdict
 import string
 from string import Template
 from conceptnet5.language.english import normalize
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, abort
 from werkzeug import secure_filename
 import os
+import os.path
 import subprocess
 import PIL
 from PIL import Image
@@ -49,6 +51,8 @@ import time
 import hashids
 from salty import saline
 import exifread
+import urlparse
+from bs4 import BeautifulSoup
 # from signal import signal, SIGPIPE, SIG_DFL
 
 app = Flask(__name__)
@@ -94,6 +98,51 @@ def about():
 @app.route("/albums")
 def albums():
     return render_template("albums.html")
+
+
+@app.route("/abm")
+def abm():
+    params = urlparse.parse_qs(request.query_string)
+    if 'l' in params:
+        hashes = [url.split('/')[-1] for url in params['l']]
+    else:
+        hashes = []
+    abmInput = [(h, chTitle(h)) for h in hashes]
+    tocHtml = render_template("toc.html", albumInput=abmInput)
+
+    slug = url_hash()
+    tocFilePath = APPPATH+'static/tocs/'+slug+'.html'
+
+    with open(tocFilePath, 'w') as outfile:
+        outfile.write(tocHtml)
+
+    proc = subprocess.Popen([
+        "ebook-convert",
+        tocFilePath,
+        APPPATH+"static/epub/"+slug+".epub",
+        "--sr1-search=/static/img/",
+        "--sr1-replace=/var/www/PhotoSyn/PhotoSyn/static/img/",
+        "--sr2-search=#F2F1EF",
+        "--sr2-replace=#FFFFFF",
+        "--sr3-search=Tweet",
+        "--sr3-replace=",
+        "--cover=/var/www/PhotoSyn/PhotoSyn/static/assets/album_cover.jpg",
+        "--title=Lexographs",
+        "--authors=word.camera",
+        "--publisher=word.camera"
+        ])
+
+    proc.communicate()
+
+    return redirect(BASEURL+"/a/"+slug)
+
+@app.route("/a/<slug>")
+def album(slug):
+    if os.path.isfile(APPPATH+"static/epub/"+slug+".epub"):
+        return render_template("a.html", s=slug)
+    else:
+        abort(404)
+
 
 @app.route("/i/<slug>")
 def userpage(slug):
@@ -150,9 +199,50 @@ def img():
 
             return redirect(BASEURL+"/i/"+slug)
         else:
-            return "Something went horribly wrong!"
+            abort(500)
     else:
-        return "You didn't say the magic word."
+        abort(404)
+
+
+def chTitle(hi):
+    htmlFile = open(APPPATH+'static/output/'+hi+'.html', 'r')
+    html = htmlFile.read()
+    htmlFile.close()
+    soup = BeautifulSoup(html)
+    text = "\n".join([unicode(i) for i in soup.p.contents]).replace("<br/>", "\n")
+    s = parsetree(text)
+    nounPhrases = []
+    for sentence in s:
+        for chunk in sentence.chunks:
+            if chunk.type == "NP":
+                nounPhrases.append(chunk.string)
+    selectNPs = rs([np for np in nounPhrases if not "&" in np], ri(1,2))
+
+    articles = ["a", "an", "the"]
+
+    nps = []
+
+    for np in selectNPs:
+        if startsWithCheck(np, articles):
+            nps.append(np)
+        else:
+            nps.append(a_or_an(np))
+
+    if len(selectNPs) == 1:
+        title = titlecase(nps[0])
+    elif len(selectNPs) == 2:
+        title = titlecase(" and ".join(nps))
+    # elif len(selectNPs) == 3:
+    #     title = titlecase("%s, %s, and %s" % tuple(nps))
+
+    return title.encode('ascii', 'xmlcharrefreplace')
+
+
+def titlecase(s):
+    words = s.split()
+    capwords = [string.capitalize(w) for w in words]
+    return " ".join(capwords)
+
 
 def url_hash():
     millis = int(round(time.time() * 1000))
@@ -263,7 +353,7 @@ def conceptNet(start):
         return {}
 
 def startsWithCheck(toCheck, wordList):
-    return any(toCheck.startswith(word+" ") for word in wordList)
+    return any(toCheck.lower().startswith(word+" ") for word in wordList)
 
 def verbConjugate(lemma, rel, aan):
     relAvoid = ["/r/CapableOf", "/r/PartOf", "/r/MemberOf"

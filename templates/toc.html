@@ -1,0 +1,10 @@
+<html>
+   <body>
+     <h1>Table of Contents</h1>
+     <p style="text-indent:0pt">
+     {% for hash, chTitle in albumInput %}
+        <a href="/var/www/PhotoSyn/PhotoSyn/static/output/{{ hash }}.html">{{ chTitle }}</a><br/>
+     {% endfor %}
+     </p>
+   </body>
+</html>

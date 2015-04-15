@@ -16,10 +16,73 @@
 
 <div class="inner cover">
 
-	<p class="text-center">
-	coming soon: lexograph collections, downloadable as free ebooks
+  <p class="text-left">
+  Read, catalogue, and share your lexographs offline with ebook albums. If you haven't made any lexographs yet, visit the <a href="/" class="weird-link">main page</a> to do so.
+  </p>
+
+	<p class="text-left">
+	To make an album, paste lexograph URLs into the input boxes below. Only <span class="kali">/i/</span> URLs from word.camera will work (e.g. http://word.camera<span class="kali">/i/</span>AbCdEfGhI).
+  </p>
+
+  <p class="text-left bottom-space">
+  The <span class="glyphicon glyphicon-plus p-icon"></span> button will create more fields, and the <span class="glyphicon glyphicon-cog p-icon"></span> button will create your album (DRM-free ePub format).
 	</p>
 
+<form action="abm" method="get" id="fffform" class="black-text" style="font-size: 12px;">
+
+  <label for="ti2"><input type="text" name="l" placeholder="e.g. http://word.camera/i/PageID" size=35 id="ti2" required="true"></label>
+  <br />
+  <label for="ti3"><input type="text" name="l" size=35 id="ti3"></label>
+  <br />
+  <label for="ti4"><input type="text" name="l" size=35 id="ti4"></label>
+  <br />
+  <div id="readroot">
+    <label for="ti5"><input type="text" name="l" size=35 id="ti5"></label>
+  	<br />
+  </div>
+
+  <span id="writeroot"></span>
+
+<!--   <div class="albumButtonBox"> -->
+
+  <button class="btn btn-default glyphicon glyphicon-plus" type="button" style="padding: 2px 6px 2px 7px; font-size: 18px; margin-right: 100px;" onclick="moreFields();"></button>
+
+  <button class="btn btn-danger glyphicon glyphicon-cog" style="padding: 2px 7px 2px 7px; font-size: 20px;" type="submit" name="generate" id="bigredbutton"></button>
+
+<!--   </div> -->
+
+</form>
+
 </div>
+
+<script>
+
+var counter = 0;
+
+function moreFields() {
+  counter++;
+  var newFields = document.getElementById('readroot').cloneNode(true);
+  newFields.id = '';
+  newFields.style.display = 'block';
+  var newField = newFields.childNodes;
+  for (var i=0;i<newField.length;i++) {
+    var theName = newField[i].name
+    if (theName)
+      newField[i].id = theName + counter;
+  }
+  var insertHere = document.getElementById('writeroot');
+  insertHere.parentNode.insertBefore(newFields,insertHere);
+}
+
+var form = document.getElementById('fffform'); // form has to have ID: <form id="formID">
+form.noValidate = true;
+form.addEventListener('submit', function(event) { // listen for form submitting
+        if (!event.target.checkValidity()) {
+            event.preventDefault(); // dismiss the default functionality
+            alert('You must insert at least one URL'); // error message
+        }
+    }, false);
+
+</script>
 
 {% endblock %}
