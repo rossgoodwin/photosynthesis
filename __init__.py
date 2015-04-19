@@ -53,6 +53,10 @@ from salty import saline
 import exifread
 import urlparse
 from bs4 import BeautifulSoup
+import stripe
+from stripey import stripe_key
+import lob
+from lobby import lob_key
 # from signal import signal, SIGPIPE, SIG_DFL
 
 app = Flask(__name__)
@@ -68,6 +72,8 @@ BASEURL = 'http://word.camera'
 
 MAX_GRAF_DENSITY = 6
 
+lob.api_key = lob_key
+stripe.api_key = stripe_key
 api = ClarifaiApi() # Assumes environmental variables have been set
 
 # signal(SIGPIPE,SIG_DFL) # Hope this works
@@ -98,6 +104,76 @@ def about():
 @app.route("/albums")
 def albums():
     return render_template("albums.html")
+
+@app.route("/postcards")
+def postcards():
+    return render_template("postcards.html")
+
+@app.route("/thanks", methods=["POST"])
+def thanks():
+    if request.method == "POST":
+        # Set your secret key: remember to change this to your live secret key in production
+        # See your keys here https://dashboard.stripe.com/account/apikeys
+
+        # Get the credit card details submitted by the form
+        token = request.form['stripeToken']
+        email = request.form['stripeEmail']
+
+        # Create the charge on Stripe's servers - this will charge the user's card
+        try:
+            customer = stripe.Customer.create(
+                source=token,
+                description="Postcard Customer"
+            )
+
+            charge = stripe.Charge.create(
+                amount=500, # amount in cents, again
+                currency="usd",
+                customer=customer.id,
+                receipt_email=email,
+                description="Lexograph Postcard"
+            )
+
+        except stripe.CardError, e:
+            # The card has been declined
+            return render_template("declined.html")
+
+        else:
+            lexText, imgUrl = fetchTextImg(request.form['lex-url'])
+
+            front_template = render_template("postcard_front.html", lexText=lexText, imgUrl=imgUrl)
+            back_template = render_template("postcard_back.html", msg=request.form['message'], imgUrl=imgUrl)
+
+            send_to = {
+                'name': request.form['name-recip'],
+                'address_line1': request.form['address1-recip'],
+                'address_line2': request.form['address2-recip'],
+                'address_city': request.form['city-recip'],
+                'address_state': request.form['state-recip'],
+                'address_zip': request.form['zip-recip'],
+                'address_country': request.form['country-recip']
+            }
+
+            send_from = {
+                'name': request.form['name-sender'],
+                'address_line1': request.form['address1-sender'],
+                'address_line2': request.form['address2-sender'],
+                'address_city': request.form['city-sender'],
+                'address_state': request.form['state-sender'],
+                'address_zip': request.form['zip-sender'],
+                'address_country': request.form['country-sender']
+            }
+
+            lob.Postcard.create(
+                to_address = send_to,
+                from_address = send_from,
+                full_bleed = 1,
+                template = 1,
+                front = front_template,
+                back = back_template
+            )
+
+            return render_template("thanks.html", email=email)
 
 
 @app.route("/abm")
@@ -221,6 +297,14 @@ def img():
     else:
         abort(404)
 
+def fetchTextImg(url):
+    htmlFile = open(APPPATH+'static/output/'+url.split('/')[-1]+'.html', 'r')
+    html = htmlFile.read()
+    htmlFile.close()
+    soup = BeautifulSoup(html)
+    text = max([unicode(i) for i in soup.p.contents], key=len).replace("<br/>", "\n")
+    imgUrl = "https://word.camera" + soup.find_all('img')[0].get('src')
+    return text, imgUrl
 
 def chTitle(hi):
     htmlFile = open(APPPATH+'static/output/'+hi+'.html', 'r')
@@ -432,7 +516,7 @@ def explodeTag(tag):
     candidates = defaultdict(list)
 
     normalizedTag = normalize(tag)
-    start = "/c/en/"+normalizedTag
+    start = "/c/en/"+normalizedTag.replace(" ", "_")
 
     try:
         edges = conceptNet(start)["edges"]

@@ -58,22 +58,143 @@ New York, NY 10003
 <meta name="msapplication-config" content="/static/fav/browserconfig.xml">
 <meta name="theme-color" content="#ffffff">
 
-<link href='http://fonts.googleapis.com/css?family=Cousine:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Cousine:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+<script src="/static/js/jquery-2.1.3.min.js"></script>
 
 	<!-- Bootstrap core CSS -->
     <!-- Latest compiled and minified CSS -->
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
 
 <!-- Optional theme -->
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css"> -->
 
 <!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
 
 <link href="/static/css/cover.css" rel="stylesheet">
 
 <style>
+
+#customButton {
+  margin-top: 35px;
+  /*margin-right: 15px;*/
+}
+
+#processing {
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  background-color: rgba(242, 241, 239, 0.7);
+}
+
+/*#processing div {
+  display: table-cell;
+  vertical-align: middle;
+}*/
+
+#processing p {
+/*  padding-top: 300px;*/
+  margin-top: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 36px;
+  text-align: center;
+  color: #E74C3C;
+  background-color: #F2F1EF;
+  border-radius: 10px;
+  width: 400px;
+  border: 2px solid #FFFFFF;
+}
+
+.lex-url-container {
+  padding-top: 40px;
+  margin: auto;
+}
+
+.lex-url-container input {
+  width: 22em;
+  margin-bottom: 10px;
+  color: #333333;
+  border-radius: 3px;
+}
+
+.lex-url-container label {
+  font-weight: normal;
+  text-align: center;
+}
+
+
+.form-container {
+  width: 100%;
+  clear: both;
+  margin: auto;
+  display: table;
+  padding-bottom: 50px;
+}
+
+.form-container div {
+  display: table-row;
+}
+
+.form-container input, textarea {
+  /*width: 60%;*/
+  width: 20em;
+  display: table-cell;
+  margin-bottom: 10px;
+  color: #333333;
+  border-radius: 3px;
+}
+
+.form-container input.zip-input {
+  /*width: 5em;*/
+  
+}
+
+.form-container input.country-input {
+  /*width: 2em;*/
+}
+
+.form-container textarea {
+  height: 10em;
+}
+
+.form-container label {
+  font-weight: normal;
+  display: table-cell;
+  text-align: right;
+  padding-right: 15px;
+}
+
+label.msg-label {
+  display: block;
+  text-align: center;
+  padding-right: 0px;
+  padding-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+input.short-input {
+  width: 15em;
+}
+
+/*.form-container p {
+  display: table-cell;
+}*/
+
+.form-header {
+  font-size: 20px;
+  padding-top: 40px;
+  padding-bottom: 5px;
+}
 
 a {
   color: #F1A9A0;

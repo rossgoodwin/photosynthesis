@@ -1,0 +1,87 @@
+<html>
+<head>
+<title>lexograph</title>
+<link href='https://fonts.googleapis.com/css?family=Cousine&subset=cyrillic,cyrillic-ext,latin,greek-ext,greek,latin-ext,vietnamese' rel='stylesheet' type='text/css'>
+<style>
+  *, *:before, *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  body {
+    width: 6.25in;
+    height: 4.25in;
+    margin: 0;
+    padding: 0;
+    /* If using an image, the background image should have dimensions of 1875x1275 pixels. */
+    background-image: url({{ imgUrl }});
+    background-size: 6.25in 4.25in;
+    background-repeat: no-repeat;
+  }
+
+  #safe-area {
+    position: absolute;
+    width: 5.875in;
+    height: 3.875in;
+    left: 0.1875in;
+    top: 0.1875in;
+  }
+
+  #ink-free {
+    position: absolute;
+    width: 3.5in;
+    height: 2.7in;
+    right: -0.1875in;
+    bottom: -0.1875in;
+    background-color: white;
+  }
+
+  .byline {
+    position: absolute;
+    bottom: 25px;
+    margin: 10px;
+    width: 95%;
+    font-family: 'Cousine', monospace;
+    font-size: 14px;
+    font-weight: normal;
+    color: white;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.9);
+    background-color: rgba(51, 51, 51, 0.5);
+    padding: 5px 5px 5px 15px;
+    border-radius: 10px;   
+  }
+
+  .text {
+    margin: 10px;
+    width: 95%;
+    font-family: 'Cousine', monospace;
+    font-size: 14px;
+    font-weight: normal;
+    color: white;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.9);
+    background-color: rgba(51, 51, 51, 0.5);
+    padding: 5px 5px 5px 15px;
+    border-radius: 10px;
+  }
+</style>
+</head>
+
+<body>
+  <div id="safe-area">
+    <!-- All text should appear without the safe area. -->
+    <div class="text">
+      {{ msg }}
+    </div>
+
+    <div class="byline">
+    word.camera
+    </div>
+
+    <div id="ink-free">
+      <!-- Do not place any artwork or text in the ink free area. Address and postage will be automatically printed here when setting template=1. -->
+    </div>
+  </div>
+</body>
+
+</html>
