@@ -302,7 +302,7 @@ def fetchTextImg(url):
     html = htmlFile.read()
     htmlFile.close()
     soup = BeautifulSoup(html)
-    text = max([unicode(i) for i in soup.p.contents], key=len).replace("<br/>", "\n")
+    text = max([i for i in soup.p.contents], key=len).replace("<br/>", "\n")
     imgUrl = "https://word.camera" + soup.find_all('img')[0].get('src')
     return text, imgUrl
 
