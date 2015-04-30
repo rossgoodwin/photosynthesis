@@ -34,7 +34,7 @@ from collections import defaultdict
 import string
 from string import Template
 from conceptnet5.language.english import normalize
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory, abort
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, abort, jsonify
 from werkzeug import secure_filename
 import os
 import os.path
@@ -242,22 +242,29 @@ def album(slug):
 def userpage(slug):
     return send_from_directory(APPPATH+'static/output', slug+'.html')
 
-@app.route("/img", methods=["GET", "POST"])
+@app.route("/img", methods=["POST"])
 def img():
-    if request.method == 'POST':
+    request.get_data()
+    if request.method == "POST":
         newFilename = ""
 
         try:
             dtopUpload = request.form['IfYouScriptThisForm'] == 'GnomesWillEatYourLungs'
         except:
             dtopUpload = False
-        if request.MOBILE or dtopUpload:
+
+        try:
+            scripted = request.form['Script'] == 'Yes'
+        except:
+            scripted = False
+
+        if request.MOBILE or dtopUpload or scripted:
             f = request.files['file']
             if f and allowed_file(f.filename):
                 filename = secure_filename(f.filename)
                 f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 # Resize image and generate unique filename
-                newFilename = resizeImage(filename)
+                newFilename = resizeImage(filename)          
         else:
             f = False
             fstring = request.form['base64img']
@@ -266,7 +273,7 @@ def img():
             fh.write(fstring.decode('base64'))
             fh.close()
 
-        if newFilename:
+        if newFilename and not scripted:
             # Generate Text
             photoText = main([newFilename])
             # with open(APPPATH+"output/"+newFilename+".txt", "w") as outfile:
@@ -292,10 +299,12 @@ def img():
                 outfile.write(html)
 
             return redirect(BASEURL+"/i/"+slug)
+        elif newFilename and scripted:
+            return main([newFilename])
         else:
             abort(500)
     else:
-        abort(404)
+        return "You didn't say the magic word."
 
 def fetchTextImg(url):
     htmlFile = open(APPPATH+'static/output/'+url.split('/')[-1]+'.html', 'r')
