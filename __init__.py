@@ -299,8 +299,18 @@ def img():
                 outfile.write(html)
 
             return redirect(BASEURL+"/i/"+slug)
+
         elif newFilename and scripted:
-            return main([newFilename])
+            photoText = main([newFilename])
+            photoTextBr = photoText.replace("\n", "<br />")
+            imgPath = "/static/img/"+newFilename
+            html = render_template("result.html", imgUrl=imgPath, imgText=photoTextBr)
+            slug = url_hash()
+            with open(APPPATH+"static/output/"+slug+".html", "w") as outfile:
+                outfile.write(html)            
+
+            return "%s\n\n#####%s#####" % (photoText, slug)
+
         else:
             abort(500)
     else:
