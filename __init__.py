@@ -482,6 +482,8 @@ def verbConjugate(lemma, rel, aan):
                 "/r/HasProperty"]
     if not rel in relAvoid:
         s = parsetree(lemma, relations=True)
+
+
         try:
             vb = s[0].verbs[0].words[0].string
             result = lemma.replace(vb, conjugate(vb, "part"))
@@ -501,6 +503,19 @@ def verbConjugate(lemma, rel, aan):
 
     else:
         result = lemma
+
+    # NEW PART TO ADD ARTICLES TO BARE NOUN PHRASES FROM CONCEPTNET
+    # try:
+    #     nns = s[0].subjects + s[0].objects
+    # except:
+    #     pass
+    # else:
+    #     if nns:
+    #         for nn in nns:
+    #             if not startsWithCheck(nn.string, ['a', 'an', 'the', 'your', 'his', 'her', 'its']):
+    #                 result = result.replace(nn.string, a_or_an(nn.string))
+    #     else:
+    #         pass
         
     return result
 
