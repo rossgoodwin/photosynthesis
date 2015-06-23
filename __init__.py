@@ -537,19 +537,18 @@ def explodeTag(tag):
         endLemma = edge["end"].split("/")[-1].replace("_", " ")
         rel = edge["rel"]
         try:
-            verb = rc(relDict[rel][0])
-            aan = relDict[rel][1]
+            verbs, aan = relDict[rel]
         except KeyError:
-            verb = False
+            verbs = False
         else:
             unmodified = endLemma
             endLemma = verbConjugate(unmodified, rel, aan)
 
-        if verb and len(endLemma) > 1 and not unmodified in [tag, normalizedTag]:
+        if verbs and len(endLemma) > 1 and not unmodified in [tag, normalizedTag]:
             if aan and not startsWithCheck(endLemma, articleList):
-                candidates[verb].append(a_or_an(endLemma))
+                candidates[tuple(verbs)].append(a_or_an(endLemma))
             else:
-                candidates[verb].append(endLemma)
+                candidates[tuple(verbs)].append(endLemma)
 
     return candidates
 
@@ -585,12 +584,12 @@ def replacementDict(tc, dc, cc, tr):
 
             zipped = zip(relVerbs, lemmas)
             for j in range(MAX_PREDICATES):
-                repl["tag_%i_predicate_%i"%(i,j)] = " ".join(zipped[j])
+                repl["tag_%i_predicate_%i"%(i,j)] = "%s %s" % (rc(zipped[j][0]), zipped[j][1])
 
             dump = []
             for rv in dc[i].keys():
                 for lemma in dc[i][rv]:
-                    dump.append("%s it %s %s." % (rc(tr), rv, lemma))
+                    dump.append("%s it %s %s." % (rc(tr), rc(rv), lemma))
             random.shuffle(dump)
             repl["tag_%i_dump"%i] = dump
         else:
