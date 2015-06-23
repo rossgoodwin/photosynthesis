@@ -57,6 +57,7 @@ import stripe
 from stripey import stripe_key
 import lob
 from lobby import lob_key
+from relation_verbs import relDict
 # from signal import signal, SIGPIPE, SIG_DFL
 
 app = Flask(__name__)
@@ -520,31 +521,6 @@ def verbConjugate(lemma, rel, aan):
     return result
 
 def explodeTag(tag):
-    relDict = {
-        "/r/RelatedTo": ["evokes", False],
-        "/r/IsA": ["is", True],
-        "/r/PartOf": ["appertains to", True],
-        "/r/MemberOf": ["belongs to", True],
-        "/r/HasA": ["has", True],
-        "/r/UsedFor": ["is for", False],
-        "/r/CapableOf": ["may", False],
-        #"/r/AtLocation": [False, False],
-        "/r/Causes": ["causes", True],
-        "/r/HasSubevent": ["manifests", False],
-        "/r/HasFirstSubevent": ["began with", True],
-        "/r/HasLastSubevent": ["ends with", True],
-        "/r/HasPrerequisite": ["requires", True],
-        "/r/HasProperty": ["is", False],
-        "/r/MotivatedByGoal": ["dreams of", False],
-        "/r/ObstructedBy": ["struggles with", True],
-        "/r/Desires": ["yearns for", False],
-        "/r/CreatedBy": ["resulted from", True],
-        "/r/Synonym": ["is also known as", True],
-        "/r/Antonym": ["is not", True],
-        "/r/DerivedFrom": ["is made from", True],
-        "/r/TranslationOf": ["is known to some as", False],
-        "/r/DefinedAs": ["remains", True]
-    }
     articleList = ["a", "an", "the"]
             
     candidates = defaultdict(list)
@@ -561,7 +537,8 @@ def explodeTag(tag):
         endLemma = edge["end"].split("/")[-1].replace("_", " ")
         rel = edge["rel"]
         try:
-            verb, aan = relDict[rel]
+            verb = rc(relDict[rel][0])
+            aan = relDict[rel][1]
         except KeyError:
             verb = False
         else:
